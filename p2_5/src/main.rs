@@ -1,27 +1,32 @@
 use std::io;
 
 fn main() {
-    let mut _t = String::new();
-    io::stdin().read_line(&mut _t).expect("Failed to read line");
+    let mut t = String::new();
+    io::stdin().read_line(&mut t).expect("Failed to read line");
+    let t = t.trim().parse::<usize>().unwrap();
 
-    let mut ni_string = String::new();
-    io::stdin().read_line(&mut ni_string).expect("failed to read string of integers");
+    let mut pq_vector:Vec<(i64, i64)> = vec![];
 
-    let ni_vector:Vec<u32> = ni_string.split_whitespace().map(|x| x.parse::<u32>().unwrap()).collect();
+    for _ in 0..t {
+        let mut ani_string = String::new();
+        io::stdin().read_line(&mut ani_string).expect("failed to read string of integers");
+        let ani_vector:Vec<i64> = ani_string.split_whitespace().map(|x| x.parse::<i64>().unwrap()).collect();
 
-    for ni in ni_vector {
-        let mut r_n = ni as f64;
-        let mut outside_multiplier = ni - 1;
+        let mut p = 1i64;
+        let mut q = ani_vector[1] as i64;
 
-        loop {
-            r_n = (outside_multiplier as f64) * f64::powf(r_n + 1f64, 0.5);
-            outside_multiplier -= 1;
-            if outside_multiplier == 0 {
-                break;
-            }
+        for i in 2..(ani_vector[0] + 2) {
+            let ani = ani_vector[i as usize];
+            let temp = p;
+            p = q; // p = a_n
+            q = p * ani + temp;// q = a_n * a_(n-1) + 1
         }
 
-        println!("{:.10}", r_n);
+        pq_vector.push((p, q));
 
+    }
+
+    for pq in pq_vector {
+        println!("{}/{}", pq.1, pq.0);
     }
 }
